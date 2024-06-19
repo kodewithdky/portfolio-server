@@ -18,13 +18,17 @@ const addApp = asyncHandler(async (req, res, next) => {
    const { svg } = req.files;
    const { name } = req.body;
    if (!name) {
-      new ApiError(StatusCodes.BAD_REQUEST, "Please Provide Software's Name!");
+      return next(
+         new ApiError(StatusCodes.BAD_REQUEST, "Software name required!")
+      );
    }
    const cloudinaryResponse = await uploadOnCloudinary(svg.tempFilePath);
    if (!cloudinaryResponse || cloudinaryResponse.error) {
-      throw new ApiError(
-         StatusCodes.INTERNAL_SERVER_ERROR,
-         "Failed to upload avatar to Cloudinary"
+      return next(
+         new ApiError(
+            StatusCodes.INTERNAL_SERVER_ERROR,
+            "Failed to upload avatar to Cloudinary"
+         )
       );
    }
    const Softapp = await SoftApp.create({
@@ -44,7 +48,7 @@ const getAllApps = asyncHandler(async (req, res) => {
    const SoftApps = await SoftApp.find();
    return res
       .status(StatusCodes.OK)
-      .json(new ApiResponse(StatusCodes.Ok, SoftApps, "Fetched app!"));
+      .json(new ApiResponse(StatusCodes.OK, SoftApps, "Fetched app!"));
 });
 
 //delete app
@@ -59,7 +63,7 @@ const deleteApp = asyncHandler(async (req, res, next) => {
    await SoftApp.deleteOne();
    return res
       .status(StatusCodes.OK)
-      .json(new ApiResponse(StatusCodes.OK, "App deleted!"));
+      .json(new ApiResponse(StatusCodes.OK, {}, "App deleted!"));
 });
 
 export { addApp, getAllApps, deleteApp };

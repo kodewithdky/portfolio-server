@@ -8,9 +8,11 @@ class ApiError extends Error {
 }
 
 export const errorMiddleware = (err, req, res, next) => {
+   //if message and status code not come from api
    err.message = err.message || "Internal Server Error";
    err.statusCode = err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
 
+   //this condition only check specified error
    if (err.code === 11000) {
       const message = `Duplicate ${Object.keys(err.keyValue)} Entered`,
          err = new ApiError(message, StatusCodes.BAD_REQUEST);
@@ -28,6 +30,7 @@ export const errorMiddleware = (err, req, res, next) => {
          err = new ApiError(message, StatusCodes.BAD_REQUEST);
    }
 
+   //if error not exist
    const errorMessage = err.errors
       ? Object.values(err.errors)
            .map((error) => error.message)

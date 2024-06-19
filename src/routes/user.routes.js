@@ -24,9 +24,9 @@ router.get("/logout", isAuthenticated, logout);
 //get user
 router.get("/get-user", isAuthenticated, getUser);
 //update profile
-router.post("/update-profile", isAuthenticated, updateProfile);
+router.put("/update-profile", isAuthenticated, updateProfile);
 //change password
-router.post("/change-password", isAuthenticated, changePasword);
+router.put("/change-password", isAuthenticated, changePasword);
 //get user for portfolio
 router.get("/get-user-portfolio", getUserForPortfolio);
 //forgot password

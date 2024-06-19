@@ -44,7 +44,9 @@ const deleteMessage = asyncHandler(async (req, res, next) => {
    await message.deleteOne();
    return res
       .status(StatusCodes.OK)
-      .json(new ApiResponse(StatusCodes.OK, "Message deleted successfully"));
+      .json(
+         new ApiResponse(StatusCodes.OK, {}, "Message deleted successfully")
+      );
 });
 
 export { sendMessage, getMessages, deleteMessage };

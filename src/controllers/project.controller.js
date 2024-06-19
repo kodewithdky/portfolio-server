@@ -95,6 +95,21 @@ const updateProject = asyncHandler(async (req, res, next) => {
       projectLink,
       gitRepoLink,
    } = req.body;
+   if (
+      [
+         title,
+         description,
+         stack,
+         technologies,
+         deployed,
+         projectLink,
+         gitRepoLink,
+      ].some((field) => field?.trim() === "")
+   ) {
+      return next(
+         new ApiError(StatusCodes.BAD_REQUEST, "All fields are required!")
+      );
+   }
    const newProjectData = {
       title,
       description,
@@ -143,7 +158,7 @@ const deleteProject = asyncHandler(async (req, res, next) => {
    await project.deleteOne();
    return res
       .status(StatusCodes.OK)
-      .json(new ApiResponse(StatusCodes.OK, "Project deleted!"));
+      .json(new ApiResponse(StatusCodes.OK, {}, "Project deleted!"));
 });
 
 export {

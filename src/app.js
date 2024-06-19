@@ -22,7 +22,7 @@ app.use(morgan("dev"));
 app.use(
    fileUpload({
       useTempFiles: true,
-      tempFileDir: "../public/temp",
+      tempFileDir: "./public/temp",
    })
 );
 

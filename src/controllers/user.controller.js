@@ -9,6 +9,35 @@ import ApiError from "../middleware/error.middleware.js";
 
 //register
 const register = asyncHandler(async (req, res, next) => {
+   const {
+      name,
+      email,
+      phone,
+      about,
+      portfolio_url,
+      password,
+      youtube,
+      github,
+      instagram,
+      twitter,
+      linkedIn,
+      facebook,
+   } = req.body;
+   if (
+      [name, email, phone, about, password].some(
+         (field) => field?.trim() === ""
+      )
+   ) {
+      return next(
+         new ApiError(StatusCodes.BAD_REQUEST, "All fields are required!")
+      );
+   }
+   const user = await User.findOne({
+      $or: [{ email }, { phone }],
+   });
+   if (user) {
+      return next(new ApiError(StatusCodes.CONFLICT, "User already exist!"));
+   }
    const { avatar, resume } = req.files;
    if (!req.files || Object.keys(req.files).length == 0) {
       return next(
@@ -36,34 +65,6 @@ const register = asyncHandler(async (req, res, next) => {
          )
       );
    }
-   const {
-      name,
-      email,
-      phone,
-      about,
-      portfolio_url,
-      password,
-      github,
-      instagram,
-      twitter,
-      linkedIn,
-      facebook,
-   } = req.body;
-   if (
-      [name, email, phone, about, password].some(
-         (field) => field?.trim() === ""
-      )
-   ) {
-      return next(
-         new ApiError(StatusCodes.BAD_REQUEST, "All fields are required!")
-      );
-   }
-   const user = await User.findOne({
-      $or: [{ email }, { phone }],
-   });
-   if (user) {
-      return next(new ApiError(StatusCodes.CONFLICT, "User already exist!"));
-   }
    const newUser = await User.create({
       name,
       email,
@@ -79,6 +80,7 @@ const register = asyncHandler(async (req, res, next) => {
          url: cloudinaryResResume.secure_url,
       },
       password,
+      youtube,
       github,
       instagram,
       twitter,
@@ -177,6 +179,7 @@ const updateProfile = asyncHandler(async (req, res, next) => {
       about,
       portfolio_url,
       password,
+      youtube,
       github,
       instagram,
       twitter,
@@ -192,6 +195,7 @@ const updateProfile = asyncHandler(async (req, res, next) => {
       portfolio_url,
       password,
       github,
+      youtube,
       instagram,
       twitter,
       linkedIn,
@@ -278,7 +282,9 @@ const changePasword = asyncHandler(async (req, res, next) => {
    await user.save();
    return res
       .status(StatusCodes.OK)
-      .json(new ApiResponse(StatusCodes.OK, "Password changed successfully!"));
+      .json(
+         new ApiResponse(StatusCodes.OK, {}, "Password changed successfully!")
+      );
 });
 
 //get user portfolio
@@ -330,6 +336,7 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
          .json(
             new ApiResponse(
                StatusCodes.OK,
+               {},
                `Email send to ${user.email} successfully!`
             )
          );
@@ -357,15 +364,15 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
 //reset password
 const resetPassword = asyncHandler(async (req, res, next) => {
    const { token } = req.params;
-   const user = await User.findOne({
-      resetPasswordToken: token,
-   });
-   if (!user) {
+   const { newPassword, confirmPassword } = req.body;
+   if (!(newPassword && confirmPassword)) {
       return next(
-         new ApiError(StatusCodes.UNAUTHORIZED, "Token is invalid or expired!")
+         new ApiError(
+            StatusCodes.BAD_REQUEST,
+            "Password and confirm password required!"
+         )
       );
    }
-   const { newPassword, confirmPassword } = req.body;
    if (newPassword !== confirmPassword) {
       return next(
          new ApiError(
@@ -374,13 +381,23 @@ const resetPassword = asyncHandler(async (req, res, next) => {
          )
       );
    }
+   const user = await User.findOne({
+      resetPasswordToken: token,
+   });
+   if (!user) {
+      return next(
+         new ApiError(StatusCodes.UNAUTHORIZED, "Token is invalid or expired!")
+      );
+   }
    user.password = newPassword;
    user.resetPasswordToken = undefined;
    user.resetPasswordExpire = undefined;
    await user.save();
    return res
       .status(StatusCodes.OK)
-      .json(new ApiResponse(StatusCodes.OK, "Reset password successfully!"));
+      .json(
+         new ApiResponse(StatusCodes.OK, {}, "Reset password successfully!")
+      );
 });
 
 export {

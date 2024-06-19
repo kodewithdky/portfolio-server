@@ -51,6 +51,9 @@ const userSchema = new mongoose.Schema(
          type: String,
          required: true,
       },
+      youtube: {
+         type: String,
+      },
       github: {
          type: String,
       },

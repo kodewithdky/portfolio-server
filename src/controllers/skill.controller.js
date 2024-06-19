@@ -65,7 +65,9 @@ const updateSkill = asyncHandler(async (req, res, next) => {
    );
    return res
       .status(StatusCodes.OK)
-      .json(new ApiResponse(StatusCodes.OK, "Skills updated successfullly!"));
+      .json(
+         new ApiResponse(StatusCodes.OK, {}, "Skills updated successfullly!")
+      );
 });
 
 //delete skills
@@ -80,7 +82,7 @@ const deleteSkill = asyncHandler(async (req, res, next) => {
    await skill.deleteOne();
    return res
       .status(StatusCodes.OK)
-      .json(new ApiResponse(StatusCodes.OK, "Skill deleted!"));
+      .json(new ApiResponse(StatusCodes.OK, {}, "Skill deleted!"));
 });
 
 export { addSkill, updateSkill, getAllSkills, deleteSkill };

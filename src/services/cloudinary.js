@@ -10,7 +10,9 @@ cloudinary.config({
 const uploadOnCloudinary = async (localFilePath) => {
    try {
       if (!localFilePath) return null;
-      const res = await cloudinary.uploader.upload(localFilePath);
+      const res = await cloudinary.uploader.upload(localFilePath, {
+         folder: "portfolio",
+      });
       fs.unlinkSync(localFilePath);
       return res;
    } catch (error) {

@@ -37,14 +37,13 @@ const getAllTimeline = asyncHandler(async (req, res, next) => {
 const deleteTimeline = asyncHandler(async (req, res, next) => {
    const { id } = req.params;
    let timeline = await Timeline.findById({ _id: id });
-   console.log("timeline: ", timeline);
    if (!timeline) {
       return next(new ApiError(StatusCodes.NOT_FOUND, "Timeline not found!"));
    }
    await timeline.deleteOne();
    return res
       .status(StatusCodes.OK)
-      .json(new ApiResponse(StatusCodes.OK, "Timeline Deleted!"));
+      .json(new ApiResponse(StatusCodes.OK, {}, "Timeline Deleted!"));
 });
 
 export { addtimeline, getAllTimeline, deleteTimeline };
