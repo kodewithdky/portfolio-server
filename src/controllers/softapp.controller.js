@@ -60,7 +60,7 @@ const deleteApp = asyncHandler(async (req, res, next) => {
    }
    const SoftAppSvgId = Softapp.svg.public_id;
    await cloudinary.uploader.destroy(SoftAppSvgId);
-   await SoftApp.deleteOne();
+   await SoftApp.deleteOne({ _id: id });
    return res
       .status(StatusCodes.OK)
       .json(new ApiResponse(StatusCodes.OK, {}, "App deleted!"));

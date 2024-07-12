@@ -79,7 +79,7 @@ const deleteSkill = asyncHandler(async (req, res, next) => {
    }
    const skillSvgId = skill.svg.public_id;
    await cloudinary.uploader.destroy(skillSvgId);
-   await skill.deleteOne();
+   await skill.deleteOne({ _id: id });
    return res
       .status(StatusCodes.OK)
       .json(new ApiResponse(StatusCodes.OK, {}, "Skill deleted!"));

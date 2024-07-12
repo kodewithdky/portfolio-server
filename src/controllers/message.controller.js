@@ -41,7 +41,7 @@ const deleteMessage = asyncHandler(async (req, res, next) => {
    if (!message) {
       return next(new ApiError(StatusCodes.BAD_REQUEST, "Message not found!"));
    }
-   await message.deleteOne();
+   await message.deleteOne({ _id: id });
    return res
       .status(StatusCodes.OK)
       .json(

@@ -155,7 +155,7 @@ const deleteProject = asyncHandler(async (req, res, next) => {
    }
    const projectImageId = project.projectBanner.public_id;
    await cloudinary.uploader.destroy(projectImageId);
-   await project.deleteOne();
+   await project.deleteOne({ _id: id });
    return res
       .status(StatusCodes.OK)
       .json(new ApiResponse(StatusCodes.OK, {}, "Project deleted!"));

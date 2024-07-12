@@ -40,7 +40,7 @@ const deleteTimeline = asyncHandler(async (req, res, next) => {
    if (!timeline) {
       return next(new ApiError(StatusCodes.NOT_FOUND, "Timeline not found!"));
    }
-   await timeline.deleteOne();
+   await timeline.deleteOne({_id:id});
    return res
       .status(StatusCodes.OK)
       .json(new ApiResponse(StatusCodes.OK, {}, "Timeline Deleted!"));
