@@ -145,7 +145,7 @@ const login = asyncHandler(async (req, res, next) => {
       .json(
          new ApiResponse(
             StatusCodes.OK,
-            { user: loggedInUser, accessToken },
+            { accessToken },
             "User logged in successfully!"
          )
       );
