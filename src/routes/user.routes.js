@@ -22,7 +22,7 @@ router.post("/login", login);
 //logout
 router.get("/logout", isAuthenticated, logout);
 //get user
-router.get("/get-user", getUser);
+router.get("/get-user", isAuthenticated, getUser);
 //update profile
 router.put("/update-profile", isAuthenticated, updateProfile);
 //change password
